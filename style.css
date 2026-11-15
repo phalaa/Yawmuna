@@ -34,3 +34,33 @@ input,select,.date-control input{background:var(--field);border-color:var(--line
 @media(prefers-reduced-motion:reduce){body,aside,button,input,select,dialog,.panel,.child,.child-head,.summary,.tabs,.task,.task-icon,.history-day{transition:none}}
 
 #cloudGate{position:fixed;inset:0;background:var(--paper);z-index:100;display:grid;place-items:center;padding:20px;overflow:auto}#cloudGate[hidden]{display:none}#cloudCard{background:var(--surface);color:var(--ink);border:1px solid var(--line);padding:32px;border-radius:24px;width:min(490px,100%);box-shadow:0 20px 80px #0001}#cloudCard h1{font-size:25px}#cloudCard p{line-height:1.9}#cloudCard input{width:100%;direction:ltr;text-align:left}#loginForm button{width:100%;margin-top:14px}#authError{color:#bf5353;font-size:13px}.cloud-logo{font-size:50px;color:var(--green);margin-bottom:15px}.cloud-account{display:flex;flex-direction:column;gap:5px;font-size:11px;max-width:200px;overflow-wrap:anywhere}.cloud-account button{min-height:28px;padding:4px;font-size:11px}#syncStatus{color:var(--green)}@media(max-width:600px){#accountName{display:none}.cloud-account{max-width:140px}#cloudCard{padding:24px}}
+
+/* Two clear child names per row, with independently collapsible task lists. */
+.board{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+.child{min-width:0}
+.child-disclosure{display:block;width:100%;border:0;border-radius:0;text-align:right;padding:28px;min-height:160px}
+.child-disclosure .child-title{flex-wrap:wrap;gap:16px}
+.child-disclosure .child-name{flex:1;min-width:0}
+.child-disclosure h2{font-size:clamp(26px,3vw,40px);line-height:1.5;overflow-wrap:anywhere}
+.child-disclosure .child-title small{font-size:14px}
+.child-disclosure .avatar{width:58px;height:58px;font-size:30px}
+.child-disclosure .star-badge{font-size:16px}
+.disclosure-hint{display:block;margin-top:16px;font-size:14px;color:var(--child-ink)}
+.tasks[hidden]{display:none!important}
+.child-disclosure:focus-visible{outline-offset:-5px}
+@media(max-width:600px){
+.board{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.child-disclosure{padding:15px 10px;min-height:190px}
+.child-disclosure .child-title{flex-direction:column;gap:8px;text-align:center}
+.child-disclosure .child-name{width:100%}
+.child-disclosure h2{font-size:24px;margin-bottom:5px}
+.child-disclosure .child-title small{font-size:11px}
+.child-disclosure .star-badge{margin:0;font-size:13px;padding:6px 9px}
+.child-disclosure .avatar{display:none}
+.disclosure-hint{font-size:12px;text-align:center}
+.child .tasks{padding:6px}
+.child .task{flex-wrap:wrap;padding:10px 7px;gap:7px}
+.child .task-icon{font-size:19px;padding:5px}
+.child .task-text{flex:1 1 65px;font-size:13px;overflow-wrap:anywhere}
+.child .section-title{font-size:11px;gap:4px}
+}

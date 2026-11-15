@@ -1,0 +1,1 @@
+فك الضغط وارفع app.js وstyle.css إلى جذر مستودع phalaa/Yawmuna باستخدام Add file ثم Upload files ثم Commit changes. استبدل الملفين الحاليين فقط. لا يلزم تعديل config.js أو قاعدة البيانات. بعد اكتمال النشر اضغط Ctrl+Shift+R.
