@@ -1,0 +1,14 @@
+import {JSDOM} from 'jsdom';import {readFileSync} from 'node:fs';import assert from 'node:assert/strict';
+const dom=new JSDOM(readFileSync('index.html','utf8'),{url:'https://example.test/yawmuna/',runScripts:'outside-only',pretendToBeVisual:true}),w=dom.window;
+let remote=null,fail=null,calls=0;const callbacks=[];
+w.setInterval=()=>0;w.confirm=()=>true;w.YAWMUNA_CONFIG={supabaseUrl:'https://example.supabase.co',supabasePublishableKey:'sb_publishable_example'};
+w.SupabaseSDK={createClient:()=>({auth:{getSession:async()=>({data:{session:{user:{id:'user1',email:'parent@example.test'}}}}),onAuthStateChange:fn=>callbacks.push(fn),signOut:async()=>({error:null})},from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>({data:structuredClone(remote),error:null})})})}),rpc:async(name,args)=>{calls++;await new Promise(r=>setTimeout(r,5));if(fail)return {error:{message:fail}};remote={revision:(remote?.revision||0)+1,data:JSON.parse(JSON.stringify(args.p_data))};return {data:structuredClone(remote),error:null}}})};
+const append=w.document.body.append.bind(w.document.body);w.document.body.append=node=>{if(node.tagName==='SCRIPT'&&node.src.endsWith('/app.js')){w.eval(readFileSync('app.js','utf8'));node.onload()}else append(node)};
+w.eval(readFileSync('theme.js','utf8'));w.eval(readFileSync('cloud.js','utf8'));await new Promise(r=>setTimeout(r,30));
+assert(w.document.querySelector('[data-toggle]'));assert(w.document.getElementById('cloudGate').hidden);
+w.document.querySelector('[data-toggle]').click();assert(!w.document.getElementById('cloudGate').hidden);await new Promise(r=>setTimeout(r,30));assert.equal(calls,1);assert.equal(Object.values(remote.data.logs).flatMap(Object.values).length,1);assert(w.document.getElementById('cloudGate').hidden);
+fail='REVISION_CONFLICT';w.document.querySelector('[data-toggle]').click();await new Promise(r=>setTimeout(r,30));assert(w.document.getElementById('pendingDownload'));assert(w.localStorage.getItem('yawmuna-pending-user1'));assert.equal(Object.values(remote.data.logs).flatMap(Object.values).length,1);
+w.document.getElementById('reloadCloud').click();await new Promise(r=>setTimeout(r,30));assert.equal(w.localStorage.getItem('yawmuna-pending-user1'),null);assert(w.document.querySelector('.task.done'));
+fail=null;remote={revision:remote.revision+1,data:structuredClone(remote.data)};remote.data.children[0].name='اسم من جهاز آخر';await w.Cloud.refresh();assert(w.document.body.textContent.includes('اسم من جهاز آخر'));
+for(const page of ['settings','rewards','history','board']){w.document.querySelector(`[data-page="${page}"]`).click();assert(w.document.getElementById('content').innerHTML.length>50)}
+dom.window.close();console.log('PASS: startup, task completion persisted, save overlay, conflict recovery, pending retention, cloud refresh, all application pages.');
