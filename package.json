@@ -1,0 +1,18 @@
+{
+  "name": "yawmuna-cloud",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Arabic family task board with Supabase PostgreSQL",
+  "scripts": {
+    "build:vendor": "esbuild vendor-entry.js --bundle --format=iife --global-name=SupabaseSDK --outfile=vendor/supabase.js --minify --legal-comments=eof",
+    "test": "node tests/database.mjs && node tests/cloud-ui.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.119.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.16",
+    "esbuild": "0.28.2",
+    "jsdom": "31.0.1"
+  }
+}
